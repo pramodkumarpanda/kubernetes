@@ -1,0 +1,88 @@
+https://kubernetestutorials.com/install-and-deploy-kubernetes-on-centos-7/
+https://stackoverflow.com/questions/52140852/kubeadm-join-fails-with-http-localhost10248-healthz-connection-refused(Trouble Shooting Guide)
+https://developer.ibm.com/tutorials/scalable-python-app-with-kubernetes/
+
+kubeadm join 192.168.56.30:6443 --token hsduft.ot81z9cold7cjpcc \
+    --discovery-token-ca-cert-hash sha256:0dc265446bb95da5cbeb5f375a828bb3e731e682536349dab48b18c4c65bd004
+25  vi /etc/hosts
+  126  vi /etc/sysconfig/selinux
+  127  swapoff -a
+  128  reboot
+  129  ls
+  130  modprobe br_netfilter
+  131  echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+  132  ls
+  133  vi /etc/fstab
+  134  mount -a
+  135  df -Th
+  136  ls
+  137  sl
+  138  ls
+  139  echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables
+  140  cd /etc/yum.repos.d/
+  141  ls
+  142  cd
+  143  yum install -y yum-utils device-mapper-persistent-data lvm2
+  144  yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  145  yum install -y docker-ce
+  146  systemctl start docker
+  147  vi /etc/yum.repos.d/kubernetes.repo
+  148  yum install -y kubelet kubeadm kubectl
+  149  ystemctl enable kubelet.service
+  150  systemctl enable kubelet.service
+  151  systemctl start kubelet.service
+  152  systemctl status kubelet.service
+  153  kubeadm status
+  154  kubeadm --help
+  155  systemctl stop kubelet.service
+  156  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  157  systemctl stop firewalld
+  158  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  159  systemctl enable docker
+  160  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  161  systemctl restart network
+  162  ping google
+  163  systemctl restart network
+  164  ping google.com
+  165  ip a s
+  166  hostnamectl set-hostname master.epam.com
+  167  reboot
+  168  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  169  systemctl stop firewalld
+  170  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  171  vi /proc/sys/net/ipv4/ip_forward
+  172  systemctl status docker
+  173  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  174  docker -version
+  175  docker --version
+  176  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  177  yum remove docker -y
+  178  rpm -qa docker
+  179  rpm -q docker
+  180  yum install docker-18.09
+  181  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  182  vi /proc/sys/net/bridge/bridge-nf-call-iptables
+  183  eecho '1' /proc/sys/net/bridge/bridge-nf-call-iptables
+  184  echo '1' /proc/sys/net/bridge/bridge-nf-call-iptables
+  185  echo "1" > /proc/sys/net/ipv4/ip_forward
+  186  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  187  cat /proc/sys/net/bridge/bridge-nf-call-iptables
+  188  echo "1" /proc/sys/net/bridge/bridge-nf-call-iptables
+  189  echo "1"  > /proc/sys/net/bridge/bridge-nf-call-iptables
+  190  kubeadm init  --pod-network-cidr=192.168.56.0/24 --apiserver-advertise-address=192.168.56.30
+  191  history
+
+	mkdir -p $HOME/.kube
+	sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+	sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f \
+https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/etcd.yaml
+
+kubectl apply -f \
+https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/hosted/calico.yaml
+
+watch kubectl get pods --all-namespaces
+
+kubectl get nodes
+
