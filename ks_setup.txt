@@ -85,4 +85,135 @@ https://docs.projectcalico.org/v3.4/getting-started/kubernetes/installation/host
 watch kubectl get pods --all-namespaces
 
 kubectl get nodes
+###########################################################################################################
+mkdir -p /opt/docker/containers/docker-registry/certs
+openssl req -nodes -sha256  -x509 -days 365  -keyout /opt/docker/containers/docker-registry/certs/docker-registry.key  -out /opt/docker/containers/docker-registry/certs/docker-registry.crt
+
+mkdir -p /opt/docker/containers/docker-registry/auth
+docker run --entrypoint htpasswd  registry -Bbn pramod pramod@123 > /opt/docker/containers/docker-registry/auth/htpasswd
+mkdir /opt/docker/containers/docker-registry/registry
+docker pull registry
+docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+
+OUTPUT: b33e64d37357818b4da1299ad65db9f7bde0a13df67ee7d3899c2486b9a2f2b5
+
+cat >> /etc/hosts << EOF
+> 172.17.0.2 docker-registry.example.com docker-registry
+> EOF
+
+
+mkdir -p /etc/docker/certs.d/server2.epam.com:5000
+
+cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs
+
+docker pull busybox
+
+docker tag busybox:latest server2.epam.com:5000/busybox
+
+
+
+cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs.d/docker-registry.example.com:5000/ca.crt
+Pull an image from Docker Hub. We will later push this image to our Private Docker Registry.
+
+
+######################################################################################################################################
+
+
+
+ 153  rm -f /etc/docker/certs.d/docker-registry.example.com:5000
+  154  rm -rf /etc/docker/certs.d/docker-registry.example.com:5000
+  155  mkdir -p /etc/docker/certs.d/server2.epam.com:5000
+  156  docker tag busybox:latest server2.epam.com:5000/busybox
+  157  docker images
+  158  docker login server2.epam.com:5000
+  159  ls
+  160  docker ps
+  161  docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+  162  docker ps
+  163  docker login server2.epam.com:5000
+  164  ls
+  165  rm -rf *
+  166  ls
+  167  docker ps
+  168  docker kill 5ce22167ecc5
+  169  docker container prune
+  170  docker images
+  171  docker rmi -f $(docker rmi -q)
+  172  docker rmi -f $(docker rmi -p)
+  173  docker rmi -f $(docker images -q)
+  174  docker images
+  175  openssl req -nodes -sha256  -x509 -days 365  -keyout /opt/docker/containers/docker-registry/certs/docker_registry.key  -out /opt/docker/containers/docker-registry/certs/docker_registry.crt
+  176  ls
+  177  docker run --entrypoint htpasswd  registry -Bbn pramod pramod@123 > /opt/docker/containers/docker-registry/auth/htpasswd
+  178  docker pull registry
+  179  docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+  180  cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs
+  181  ls
+  182  mv docker_registry.crt docker-registry.crt
+  183  mv docker_registry.key docker-registry.key
+  184  cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs
+  185  docker pull busybox
+  186  ls
+  187  docker tag busybox:latest server2.epam.com:5000/busybox
+  188  docker login docker-registry.example.com:5000
+  189  docker ps
+  190  docker login server2.epam.com:5000
+  191  ls
+  192  rm -rf *
+  193  ls
+  194  openssl req -nodes -sha256  -x509 -days 365  -keyout /opt/docker/containers/docker-registry/certs/docker-registry.key  -out /opt/docker/containers/docker-registry/certs/docker-registry.crt
+  195  ls
+  196  cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs
+  197  docker ps
+  198  docker kill 0d9df472718d
+  199  docker container prune
+  200  docker rmi -f $(docker images -q)
+  201  ls
+  202  vi /etc/hosts
+  203  docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+  204  docker tag busybox:latest server2.epam.com:5000/busybox
+  205  docker pull busybox
+  206  docker tag busybox:latest server2.epam.com:5000/busybox
+  207  docker login docker-registry.example.com:5000
+  208  docker login server2.epam.com:5000
+  209  find / -name daemon.jso
+  210  find / -name daemon.json
+  211  systemctl status docker
+  212  ls
+  213  l
+  214  ls
+  215  rm -rf *
+  216  ls
+  217  openssl req -nodes -sha256  -x509 -days 365  -keyout /opt/docker/containers/docker-registry/certs/docker-registry.key  -out /opt/docker/containers/docker-registry/certs/docker-registry.crt
+  218  ls
+  219  vi /etc/hosts
+  220  mkdir -p /etc/docker/certs.d/docker-registry.example.com:5000
+  221  cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs.d/docker-registry.example.com:5000/ca.crt
+  222  docker run --entrypoint htpasswd  registry -Bbn pramod pramod@123 > /opt/docker/containers/docker-registry/auth/htpasswd
+  223  mkdir /opt/docker/containers/docker-registry/registry
+  224  docker pull registry
+  225  docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+  226  docker ps
+  227  docker kill 8355362cc252
+  228  docker ps
+  229  docker container prune
+  230  docker run -d  --name docker-registry  --restart=always  -p 5000:5000  -v /opt/docker/containers/docker-registry/registry:/var/lib/registry  -v /opt/docker/containers/docker-registry/auth:/auth  -e "REGISTRY_AUTH=htpasswd"  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm"  -e REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  -v /opt/docker/containers/docker-registry/certs:/certs  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/docker-registry.crt  -e REGISTRY_HTTP_TLS_KEY=/certs/docker-registry.key  registry
+  231  ls
+  232  mkdir -p /etc/docker/certs.d/docker-registry.example.com:5000
+  233  cp /opt/docker/containers/docker-registry/certs/docker-registry.crt /etc/docker/certs.d/docker-registry.example.com:5000/ca.crt
+  234  docker pull busybox
+  235  docker tag busybox:latest docker-registry.example.com:5000/busybox
+  236  docker login docker-registry.example.com:5000
+  237  ls
+  238  firewall-cmd --list-all
+  239  systemctl stop firewalld
+  240  ls
+  241  cd
+  242  ls
+  243  docker ps
+  244  ls
+  245  docker images
+  246  ls
+  247  history
+######################################################################################################################################################################
 
