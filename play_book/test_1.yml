@@ -1,0 +1,109 @@
+---
+- hosts: all
+  remote_user: slave
+  become: yes
+  
+  tasks:
+  - name: configure the epel release package
+    yum:
+       name: epel-release
+       state: latest
+  - name: Add repository
+    command: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - name: enable modeule 
+    command: modprobe br_netfilter
+  - name: enable kernel parameters
+    sysctl:
+       name: "{{ item }}"
+       value: "1"
+       sysctl_set: yes
+       sysctl_file: /etc/sysctl.conf
+    with_items:
+      - net.bridge.bridge-nf-call-iptables
+      - net.ipv4.ip_forward
+  - name: Remove swapfile from /etc/fstab
+    mount:
+       name: "{{ item }}"
+       fstype: swap
+       state: absent
+    with_items:
+      - swap
+      - none
+  - name: Disable swap memory
+    command: swapoff -a
+  - name: Add repository
+    yum_repository:
+        name: kebuernetes_packages
+        description: docker installation  repo
+        baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+        gpgcheck: yes
+        enabled: yes
+  - name: Imaport kubernetes gpg keys
+    rpm_key:
+        state: present
+        key: "{{ item }}"
+    with_items:
+        - https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        - https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+  - name: install docker & kubernetes packages
+    yum:
+      name: 
+        - yum-utils 
+        - device-mapper-persistent-data 
+        - lvm2
+        - docker-ce
+        - kubelet
+        - kubeadm
+        - kubectl
+      state: present
+  - name: Start the services
+    service:
+      name: docker
+      state: started
+      enabled: true
+  - name: Add the port 
+    firewalld:
+      port: "{{ item }}"
+      permanent: yes
+      state: enabled
+    with_items:
+       - 10250/tcp
+       - 10255/tcp
+       - 30000-32767/tcp
+       - 6783/tcp
+       - 8080/tcp
+       - 6443/tcp
+   
+  - name: Initialize the Kubernetes cluster using kubeadm
+    command: kubeadm init --apiserver-advertise-address="192.168.56.12"   --node-name server3.example.com --pod-network-cidr=192.168.0.0/16 --service-cidr=192.168.0.0/24
+    register: command_output
+    when: inventory_hostname in groups['master'] 
+  - name: Config files
+    command: mkdir -p /root/.kube
+    when: inventory_hostname in groups['master']
+  - command: cp -i /etc/kubernetes/admin.conf /root/.kube/config
+    when: inventory_hostname in groups['master']
+  - command: chown slave:slave /root/.kube/config
+    when: inventory_hostname in groups['master']
+  - name: Install calico pod network
+    command: kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+    when: inventory_hostname in groups['master']
+  - name: Generate join command
+    command: kubeadm token create --print-join-command
+    register: join_command
+    when: inventory_hostname in groups['master']
+
+  - name: Copy join command to local file
+    local_action: copy content="{{ join_command.stdout_lines[0] }}" dest="./join-command"
+    when: inventory_hostname in groups['master']
+  - name: Copy the join command to server location
+    copy: src=join-command dest=/tmp/join-command.sh mode=0777
+    when: inventory_hostname in groups['worker']
+  - name: Join the node to cluster
+    command: sh /tmp/join-command.sh
+    when: inventory_hostname in groups['worker']
+
+
+
+
+   

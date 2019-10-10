@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: slave
+  become: yes
+  
+  tasks:
+  - name: configure the epel release package
+    command: ip a s
+    register: output
+    when: inventory_hostname in groups['worker']
+  - debug:
+     msg: "{{ output }}"
