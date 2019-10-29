@@ -216,4 +216,19 @@ Pull an image from Docker Hub. We will later push this image to our Private Dock
   246  ls
   247  history
 ######################################################################################################################################################################
+MINIKUBE INSTALLATION ON AWS
+------------------------------------
+amazon-linux-extras install epel
+yum install docker -y
+KUBE_VERSION=$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)
+curl -Lo kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBE_VERSION}/bin/linux/amd64/kubectl
+chmod +x kubectl
+ mv -f kubectl /usr/sbin/
+ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+ install minikube-linux-amd64 /usr/sbin/minikube
+ minikube start --vm-driver=none
+ 
+
+
+
 
