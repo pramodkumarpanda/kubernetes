@@ -228,7 +228,52 @@ chmod +x kubectl
  install minikube-linux-amd64 /usr/sbin/minikube
  minikube start --vm-driver=none
  
-
+#####################################################################################################
+MINIKUBE SETUP
+###################################################################################################
+ yum install qemu-kvm qemu-img virt-manager libvirt libvirt-python libvirt-client virt-install virt-viewer bridge-utils
+   15  grep -E --color 'vmx|svm' /proc/cpuinfo
+   16  grep -E --color 'vmx|svm' /proc/cpuinfo
+   17  grep -E --color 'vmx|svm' /proc/cpuinfo
+   18   systemctl start libvirtd
+   19   lsmod | grep kvm lsmod | grep kvm
+   20   lsmod | grep kvm
+   21  lsmod
+   22  yum install "@X Window System" xorg-x11-xauth xorg-x11-fonts-* xorg-x11-utils -y
+   23  virt-manager
+   24  ps
+   25  curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64   && chmod +x minikube
+   26  mkdir -p /usr/local/bin/
+   27  install minikube /usr/local/bin/
+   28  brew install minikube
+   29  minikube start
+   30  ls
+   31  ./minikube start
+   32  ./minikube start --vm-driver=kvm
+   33  ./minikube start --vm-driver=none
+   34  yum install docker -y
+   35  ./minikube start --vm-driver=none
+   36  mv /root/.kube /root/.minikube $HOME
+   37  mv /root/.kube /root/.minikube $HOME
+   38  chown -R $USER $HOME/.kube $HOME/.minikube
+   39  kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
+   40  ls
+   41  ls
+   42  ls
+   43  ls -a
+   44  find / -name kubectl
+   45  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl
+   46  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl get nodes
+   47  ./minikube ip
+   48  ip a s
+   49  hostname -i
+   50  ./minikube ip
+   51  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
+   52  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl expose deployment hello-minikube --type=NodePort --port=8080
+   53  kubectl get pod
+   54  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl  get pod
+   55  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl  service hello-minikube --url
+   56  /var/lib/docker/overlay2/afe85c4bdd2996c4f2008a984393f910b9cc1ecf2c2b9524f8c61241086aef2b/diff/usr/local/bin/kubectl  get svc
 
 
 
