@@ -23,6 +23,22 @@ Only WORKER:
 kubeadm join 172.31.36.79:6443 --token lbt003.seu1tt0atw1s17ie \
 >     --discovery-token-ca-cert-hash token
 
+TESTING:
+-------------------
+kubectl get pods --all-namespaces
+     cd
+     kubectl get nodes
+     history
+     cd
+     kubectl get namespaces
+     kubectl create deployment nginx --image=nginx
+     kubectl get deployments
+     kubectl describe deployment nginx
+     kubectl create service nodeport nginx --tcp=80:80
+     kubectl get svc
+TUTORIAL:
+---------------
+
 
 
 
