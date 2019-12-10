@@ -38,6 +38,51 @@ kubectl get pods --all-namespaces
      kubectl get svc
 TUTORIAL:
 ---------------
+vi client-pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+        name: clinet-pod
+        labels:
+                componenet: web
+spec:
+        containers:
+                - name: clinet
+                  image: nginx
+                  ports:
+                          - containerPort: 80
+vi client-node-pod.yml
+apiVersion: v1
+kind: Service
+metadata:
+        name: clinet-node-port
+spec:
+        type: NodePort
+        ports:
+         - port: 3050
+           targetPort: 80
+           nodePort: 31515
+        selector:
+                componenet: web
+#######################################
+ kubectl delete deployments nginx
+  kubectl get deployments
+   84  kubectl get svc
+   85  kubectl delete deployments nginx
+   86  kubectl get deployments
+   87  kubectl delete service nginx
+   88  kubectl get deployments
+   89  kubectl get svc
+   90  kubectl delete service clinet-node-port
+   91  kubectl get svc
+   92  ls
+   93  vi client-node-port.yml
+   94  kubectl apply -f client-pod.yml
+   95  kubectl get deployments
+   96  kubectl get pods --all-namespaces
+   97  kubectl delete pod clinet-pod
+
+
 
 
 
