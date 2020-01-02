@@ -13,9 +13,13 @@ sudo apt-get remove docker docker-engine docker.io
 sudo apt install docker.io
 systemctl start docker
 systemctl enable docker
+
+
+
 ################################################
 ONLY MASTER:
 ---------------
+kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
 kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=172.31.36.79 
 
 Only WORKER:
