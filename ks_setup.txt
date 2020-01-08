@@ -1,3 +1,4 @@
+https://stackify.com/canary-deployments/
 https://learnk8s.io/kubernetes-rollbacks
 https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
 Installation on Master & Worker:
