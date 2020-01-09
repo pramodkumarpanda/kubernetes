@@ -130,9 +130,6 @@ spec:
 https://kubernetestutorials.com/install-and-deploy-kubernetes-on-centos-7/
 https://stackoverflow.com/questions/52140852/kubeadm-join-fails-with-http-localhost10248-healthz-connection-refused(Trouble Shooting Guide)
 https://developer.ibm.com/tutorials/scalable-python-app-with-kubernetes/
-
-kubeadm join 192.168.56.30:6443 --token hsduft.ot81z9cold7cjpcc \
-    --discovery-token-ca-cert-hash sha256:0dc265446bb95da5cbeb5f375a828bb3e731e682536349dab48b18c4c65bd004
 25  vi /etc/hosts
   126  vi /etc/sysconfig/selinux
   127  swapoff -a
