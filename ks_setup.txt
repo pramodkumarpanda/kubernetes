@@ -17,7 +17,27 @@ sudo apt install docker.io
 systemctl start docker
 systemctl enable docker
 
+HA PROXY CONFIGURATION ON KUBERNETES
+-----------------------------------------
+UNDER GLOBAL SECTIO ADD BELOW CONTENT:
+------------------------------------------
+ frontend kubernetes
+        bind 172.31.33.57:6443
+        option tcplog
+        mode tcp
+        default_backend kubernetes-master-nodes
 
+
+        backend kubernetes-master-nodes
+        mode tcp
+        balance roundrobin
+        option tcp-check
+        server k8s-master-1 172.31.44.203:6443 check fall 3 rise 2
+
+
+
+
+-----------------------------------------
 
 ################################################
 ONLY MASTER:
