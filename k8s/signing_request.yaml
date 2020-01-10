@@ -1,0 +1,23 @@
+apiVersion: certificates.k8s.io/v1beta1
+kind: CertificateSigningRequest
+metadata:
+        name: pramod_key
+spec:
+  groups:
+  - system:authenticated
+  request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ3VqQ0NBYUlDQVFBd1J6RUxNQWtHQTFVRUJoTUNTVzR4Q3pBSkJnTlZCQWdNQWs5a01Rc3dDUVlEVlFRSApEQUpQWkRFTk1Bc0dBMVVFQ2d3RVpXNW5aekVQTUEwR0ExVUVBd3dHY0hKaGJXOWtNSUlCSWpBTkJna3Foa2lHCjl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUExQjJQa1dLZDU1MkFGTXc0aC82MDBwRXJ1aS9hdmVtTmRmaVIKeHFmbzJLdXNiOVEzRElWMFVINjF3NkNVVTYwbHp3enBQR3YvYjZ1L2djRjZ0VUhHNzVuR2RMV1lDeVQrL3hIZApoNFJtVHpOU2FrczM1S2k0YkEwNllrUThtYVYzZjljRzRwNlVMZU12SWV0NzlNN1pkdjNrYk94L3dOdHYvRUFBCjdrK0F1UEdQNSs0K1dNNW5vaU16Zmg1OG1PUFVqRlBUdTcySWEvTjNjVTVaUVdvM0gyamhuUXBBUUNXSVNHMEUKOG5zR2FDTHV6UTlDWmV6MXhhUStJNm85bkF0UVpldktrelQ2L1BYSVdBbEdOQlNYdDZZaFB0cndOUUczWCtkMQpqOVA1LytRMGpRZDFiTEIvRGozSHhMVThrME5YaFdXSkorRGk0V2doMmlmK0VxR0RhUUlEQVFBQm9DNHdGUVlKCktvWklodmNOQVFrQ01RZ01CbkJ5WVcxdlpEQVZCZ2txaGtpRzl3MEJDUWN4Q0F3R2NISmhiVzlrTUEwR0NTcUcKU0liM0RRRUJDd1VBQTRJQkFRQ2VaSGI5RDhIT3UzcTkzMCswdFpHdXRMMjJUWEJjUC95T2ErNm40T2prVG1GcAo1T0pDb0R5UzNYcmFNT0EvdkdwR2NlaHhCMnlJdmVLTUpiOGNDVUtsczhQcmdlcFFPZy9FMWJBRlI5T0V6T3d0CmduOUN4SkhBcVg4d2NvRC9GdHF0YzRKNjZnKzAxbmRueTc1NWgwbWR4akZCK09XNHJUTkRmaTlzOXU5WWtCZXMKYjNSMnEwK0t3VUpuT0VaOFJ3elQ4aUFIYXRSc3NwVlIra1dYTlFBNnc1M3hoWkl6MmdrTzhrMkhqU2F5K3RFRQpRbmZyNlYwT1FlS090Q3l2aS81c3RUdUM5UGVHKzhEVjI3bDYxQWhEQVI3Q0dEUkJMSnNlZjhYZG9ybDRqZGl6CnBnenAwb2lpT0NHT0VleVoxanZBTlNhNE16STJlVHV0b293clB5YUMKLS0tLS1FTkQgQ0VSVElGSUNBVEUgUkVRVUVTVC0tLS0tCg==
+  usages:
+  - digital signature
+  - key encipherment
+  - server auth
+###################################################################################
+#openssl genrsa -out pramod.key 2048
+openssl req  -new -key  pramod.key -out pramod.csr
+cat pramod.csr | base64 |tr -d '\n'
+vi signing_request.yaml
+kubectl create -f signing_request.yaml
+kubectl get csr
+kubectl certificate approve pramod.csr
+kubectl get csr pramod_key -o json # decode
+ech hashcertificate value|| base64 --decode
+kubectl config set-credentials pramod --client-certificate = pramod.crt --clinet-key=pramod.key
