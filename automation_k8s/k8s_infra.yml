@@ -1,0 +1,55 @@
+- hosts: all
+  become: true
+  become_user: root
+  tasks:
+  - name: Update and upgrade apt packages
+    become: true
+    apt: upgrade=yes update_cache=yes
+  - name: Install haproxy
+    apt: name=haproxy state=present
+    when: inventory_hostname in groups["k8s_lb"]	
+  - name: copy configuration file to ha-proxy
+    copy: src=haproxy.cfg dest=/etc/haproxy/haproxy.cfg force=yes
+    notify:
+      - haproxy status
+    when: inventory_hostname in groups["k8s_lb"]
+  - name: start the haproxy service
+    service: name=haproxy state=started
+    when: inventory_hostname in groups["k8s_lb"]
+  - name: Install the k8s prereqisite
+    apt: name=apt-transport-https state=present
+    when: inventory_hostname not in groups["k8s_lb"]
+  - name: add the apt keys for kubernetes
+    apt_key:
+     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+     state: present
+    when: inventory_hostname not in groups["k8s_lb"]
+  - name: add a apt repository 
+    apt_repository: 
+     repo: deb https://apt.kubernetes.io/ kubernetes-xenial main 
+     state: present 
+     filename: k8s
+     update_cache: yes
+    when: inventory_hostname not in groups["k8s_lb"]
+  - name: Install Kubernetes binaries
+    apt: 
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+    vars:
+      packages:
+        - kubelet 
+        - kubeadm 
+        - kubectl   
+    when: inventory_hostname not in groups["k8s_lb"]
+  - name: install docker
+    apt: name=docker.io state=present 
+    notify:
+      - docker status
+    when: inventory_hostname not in groups["k8s_lb"]
+  handlers:
+    - name: docker status
+      service: name=docker state=started
+    - name: haproxy status
+      service: name=haproxy state=started
+
