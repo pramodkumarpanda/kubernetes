@@ -1,0 +1,1 @@
+kubeadm join localhost:6443 --token kmim40.lux66wtgk190v2x1 --discovery-token-ca-cert-hash sha256:e162ef3ac90a53bf8f55e156392d0853e9be63e5e1c7d8ec7bf1d4204612ad6c 

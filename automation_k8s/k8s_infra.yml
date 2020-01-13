@@ -13,9 +13,6 @@
     notify:
       - haproxy status
     when: inventory_hostname in groups["k8s_lb"]
-  - name: start the haproxy service
-    service: name=haproxy state=started
-    when: inventory_hostname in groups["k8s_lb"]
   - name: Install the k8s prereqisite
     apt: name=apt-transport-https state=present
     when: inventory_hostname not in groups["k8s_lb"]
@@ -47,6 +44,37 @@
     notify:
       - docker status
     when: inventory_hostname not in groups["k8s_lb"]
+  - name: Initialize the Kubernetes cluster using kubeadm
+    command: kubeadm init --control-plane-endpoint "localhost:6443" --ignore-preflight-errors=NumCPU --upload-certs
+    when: inventory_hostname in groups["k8s_master"] and master == "start" and new == "true"
+  - name: Setup kubeconfig for vagrant user
+    command: "{{ item }}"
+    with_items:
+      - mkdir -p /root/.kube
+      - cp -i /etc/kubernetes/admin.conf /root/.kube/config
+      - chown root:root /root/.kube/config
+    when: inventory_hostname in groups["k8s_master"] and master=="start" and new == "true"
+  - name: Generate worker join command
+    command: kubeadm token create --print-join-command
+    register: join_command_worker
+    when: inventory_hostname in groups["k8s_master"] and master=="start"
+
+  - name: Copy worker_join command to local file
+    local_action: copy content="{{ join_command_worker.stdout_lines[0] }}" dest="./worker-join-command"
+    when: inventory_hostname in groups["k8s_master"] and master=="start"
+  - name: Generate master_join command
+    command: kubeadm init phase upload-certs --upload-certs
+    register: join_command_master
+    when: inventory_hostname in groups["k8s_master"] and master=="start"
+  - name: Copy worker_join command to local file
+    local_action: copy content="{{ join_command_master.stdout_lines[2] }}" dest="./master-join-command"
+    when: inventory_hostname in groups["k8s_master"] and master=="start"
+  - name: Generate a master file 
+    shell: sh /root/kubernetes/automation_k8s/create_join_master.sh 
+    when: inventory_hostname == "localhost"
+  - name: Copy the worker join command to worker  location
+    copy: src=worker-join-command dest=/tmp/join-command.sh mode=0777
+    when: inventory_hostname in groups["k8s_worker"] and new=="true"
   handlers:
     - name: docker status
       service: name=docker state=started
