@@ -1,0 +1,1 @@
+ --control-plane --certificate-key  --ignore-preflight-errors=NumCPU

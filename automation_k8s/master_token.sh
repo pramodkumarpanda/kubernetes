@@ -1,0 +1,1 @@
+kubeadm join 172.31.32.78:6443 --token xv33ye.ds3gtlboucqm6xkg     --discovery-token-ca-cert-hash sha256:348045b254cc1f61d3345bc8b16a066d3da3d6f1622853b2070aa203268d3f63  --control-plane --certificate-key 644918afa6413b246bd9588ee22fa8f87550fdd007fe5b9429fbe6104a073f6e --ignore-preflight-errors=NumCPU

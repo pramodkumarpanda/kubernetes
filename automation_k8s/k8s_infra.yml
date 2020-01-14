@@ -3,7 +3,6 @@
   become_user: root
   tasks:
   - name: Update and upgrade apt packages
-    become: true
     apt: upgrade=yes update_cache=yes
   - name: Install haproxy
     apt: name=haproxy state=present
@@ -45,7 +44,7 @@
       - docker status
     when: inventory_hostname not in groups["k8s_lb"]
   - name: Initialize the Kubernetes cluster using kubeadm
-    command: kubeadm init --control-plane-endpoint "localhost:6443" --ignore-preflight-errors=NumCPU --upload-certs
+    command: kubeadm init --control-plane-endpoint "172.31.32.78:6443" --ignore-preflight-errors=NumCPU --upload-certs
     when: inventory_hostname in groups["k8s_master"] and master == "start" and new == "true"
   - name: Setup kubeconfig for vagrant user
     command: "{{ item }}"
@@ -53,28 +52,58 @@
       - mkdir -p /root/.kube
       - cp -i /etc/kubernetes/admin.conf /root/.kube/config
       - chown root:root /root/.kube/config
-    when: inventory_hostname in groups["k8s_master"] and master=="start" and new == "true"
+    when: inventory_hostname in groups["k8s_master"] and master=="start"  and new=="true"
+  - name: Copy the Weave Shell to Master-1 node
+    copy: src=weave.sh dest=/tmp/weave.sh mode=0777 force=yes
+    when: inventory_hostname in groups["k8s_master"] and master=="start"  and new=="true"
+  - name: Apply the network
+    shell: sh /tmp/weave.sh
+    when: inventory_hostname in groups["k8s_master"] and master=="start" and new=="true"
+
+
+
   - name: Generate worker join command
     command: kubeadm token create --print-join-command
     register: join_command_worker
     when: inventory_hostname in groups["k8s_master"] and master=="start"
 
   - name: Copy worker_join command to local file
-    local_action: copy content="{{ join_command_worker.stdout_lines[0] }}" dest="./worker-join-command"
+    local_action: copy content="{{ join_command_worker.stdout_lines[0] }}" dest="./worker-join-command" force=yes
     when: inventory_hostname in groups["k8s_master"] and master=="start"
+
+
+
   - name: Generate master_join command
     command: kubeadm init phase upload-certs --upload-certs
     register: join_command_master
     when: inventory_hostname in groups["k8s_master"] and master=="start"
+
   - name: Copy worker_join command to local file
-    local_action: copy content="{{ join_command_master.stdout_lines[2] }}" dest="./master-join-command"
+    local_action: copy content="{{ join_command_master.stdout_lines[2] }}" dest="./master-join-command" force=yes
     when: inventory_hostname in groups["k8s_master"] and master=="start"
-  - name: Generate a master file 
-    shell: sh /root/kubernetes/automation_k8s/create_join_master.sh 
-    when: inventory_hostname == "localhost"
+
   - name: Copy the worker join command to worker  location
     copy: src=worker-join-command dest=/tmp/join-command.sh mode=0777
     when: inventory_hostname in groups["k8s_worker"] and new=="true"
+
+  - name: Join the worker node to cluster
+    command: sh /tmp/join-command.sh
+    when: inventory_hostname in groups["k8s_worker"] and new=="true"
+  - name: remove the old token
+    shell: rm -f ./master_token.sh
+    when: inventory_hostname == "localhost"
+  - name: Generate a master file to create the master token
+    shell: /root/kubernetes/automation_k8s/create_join_master.sh
+    when: inventory_hostname == "localhost" 
+
+  - name: Copy the master join command to master nodes except start
+    copy: src=master_token.sh dest=/tmp/master_token.sh mode=0777 force=yes
+    when: inventory_hostname in groups["k8s_master"] and new=="true"  and master !="start"
+
+    #- name: Execute the master join command 
+    #shell: sh /tmp/master_token.sh
+    #when: inventory_hostname in groups["k8s_master"] and new=="true"  and master !="start"
+
   handlers:
     - name: docker status
       service: name=docker state=started

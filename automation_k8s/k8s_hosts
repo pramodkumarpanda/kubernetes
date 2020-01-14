@@ -1,6 +1,7 @@
-[k8s_lb]
-localhost master="" new=""
-[k8s_master]
+["k8s-proxy"]
+ 172.31.32.78 master="" new=false
+["k8s-master"]
 172.31.32.140 master=start new=false
-#172.31.38.72
-#[k8s_worker]
+172.31.95.82 master="" new=true
+["k8s-worker"]
+172.31.87.197 master="" new=flase
