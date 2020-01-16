@@ -1,3 +1,4 @@
+https://kubernetes.github.io/ingress-nginx/deploy/ # nginx ingress controller
 https://www.cncf.io/blog/2018/08/01/demystifying-rbac-in-kubernetes/
 https://stackify.com/canary-deployments/
 https://learnk8s.io/kubernetes-rollbacks
