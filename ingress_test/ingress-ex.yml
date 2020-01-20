@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: routing-ing
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /catlog/
+        backend:
+          serviceName: catlog-svc
+          servicePort: 8080
+  - http:
+      paths:
+      - path: /login/
+        backend:
+          serviceName: login-svc
+          servicePort: 8080
+
