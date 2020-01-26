@@ -47,6 +47,17 @@ ONLY MASTER:
 ---------------
 kubeadm init --pod-network-cidr=192.168.0.0/16  --apiserver-advertise-address=172.31.36.79 
 kubectl apply -f https://docs.projectcalico.org/v3.8/manifests/calico.yaml
+####################################################################3
+create a new user
+###################################
+openssl genrsa -out rabi.key 2048
+   35  ls
+   36  openssl req -new -key rabi.key -out rabi.csr -subj "/CN=rabi/O=test"
+   37  ls
+   38  top
+   39  ls
+   40  openssl x509 -req -in rabi.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out rabi.crt -days 365
+
 
 
 Only WORKER:
