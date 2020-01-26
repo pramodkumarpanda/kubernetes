@@ -4,6 +4,7 @@ https://www.cncf.io/blog/2018/08/01/demystifying-rbac-in-kubernetes/
 https://stackify.com/canary-deployments/
 https://learnk8s.io/kubernetes-rollbacks
 https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
+https://docs.bitnami.com/bch/infrastructure/kubernetes-sandbox/configuration/add-users/
 Installation on Master & Worker:
 ------------------------------
 sudo apt-get update && sudo apt-get install -y apt-transport-https curl
