@@ -58,6 +58,49 @@ openssl genrsa -out rabi.key 2048
    38  top
    39  ls
    40  openssl x509 -req -in rabi.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out rabi.crt -days 365
+    43  mkdir /home/rabi/certs
+   44  ls
+   45  cp rabi.crt rabi.key /home/rabi/certs/
+   46  ls
+   47  kubectl config set-credentials rabi --client-certificate=/home/rabi/certs/rabi.crt  --client-key=/home/rabi/certs/rabi.key 
+   48  cd 
+   49  cd .kube/
+   50  vi config 
+   51  kubectl config set-context rabi-context --cluster=kubernetes --namespace=default --user=rabi
+   52  top
+   53  ls
+   54  vi config 
+   55  kubectl --context=rabi-context get pods
+   56  mkdir /home/rabi/.kube
+   57  cp config /home/rabi/.kube/
+   58  cd 
+   59  su - rabi
+   60  chown -R rabi:rabi /home/rabi/
+   61  chown -Rv rabi:rabi /home/rabi/
+
+CONFIG
+====================
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: ""
+    server: https://172.31.82.76:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    namespace: default
+    user: rabi
+  name: rabi-context
+current-context: rabi-context
+kind: Config
+preferences: {}
+users:
+- name: rabi
+  user:
+    client-certificate: /home/rabi/certs/rabi.crt
+    client-key: /home/rabi/certs/rabi.key
+ 
 
 
 
