@@ -1,0 +1,14 @@
+apiVersion: "v1"
+kind: "PersistentVolume"
+metadata:
+  name: "pv0002"
+  labels:
+     release: "stable" 
+spec:
+  capacity:
+    storage: "10Gi" 
+  accessModes:
+    - "ReadWriteOnce"
+  awsElasticBlockStore: 
+    fsType: "ext4" 
+    volumeID: "vol-05b360f39e3e2000f" 
