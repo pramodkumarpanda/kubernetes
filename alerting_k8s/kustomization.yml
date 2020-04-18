@@ -1,0 +1,6 @@
+# Create a kustomization.yaml file with ConfigMapGenerator
+configMapGenerator:
+  namespace: monitoring
+- name: prometheus-config
+  files:
+  - prometheus.yml
