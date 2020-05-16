@@ -5,3 +5,6 @@ scrape_configs:
       scheme: https
       tls_config:
               ca_file: /etc/kubernetes/pki/ca.crt
+    - job_name: 'kube-state-metrics'
+      static_configs:
+        - targets: ['192.168.99.100:32727']
